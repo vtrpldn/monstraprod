@@ -198,17 +198,6 @@ body::before {
   margin-bottom: 1rem;
 }
 
-.featured-project .section-label {
-  margin-bottom: 0.5rem;
-}
-
-.project-intro {
-  margin: 0 0 1rem;
-  color: var(--muted);
-  font-size: 0.82rem;
-  line-height: 1.5;
-}
-
 .language-switcher {
   position: absolute;
   top: clamp(1.25rem, 2.5vw, 2.5rem);

@@ -14,8 +14,6 @@ const content = {
     contact: "Contato",
     contactNav: "Formas de contato",
     email: "contato@monstraprod.com",
-    featuredProject: "Projeto em destaque",
-    projectRelationship: "Uma iniciativa cultural da Monstra.",
     projectName: "Grupo Flying Low",
     languageLabel: "Idioma",
     flyingLowUrl: "https://grupoflyinglow.com",
@@ -32,8 +30,6 @@ const content = {
     contact: "Contact",
     contactNav: "Contact options",
     email: "hello@monstraprod.com",
-    featuredProject: "Featured project",
-    projectRelationship: "A cultural project by Monstra.",
     projectName: "Grupo Flying Low",
     languageLabel: "Language",
     flyingLowUrl: "https://www.grupoflyinglow.com/en",
@@ -108,25 +104,7 @@ function render() {
       <div class="divider" aria-hidden="true"></div>
 
       <div class="details">
-        <section class="contact" aria-labelledby="contact-heading">
-          <h2 id="contact-heading" class="section-label">${copy.contact}</h2>
-          <nav class="contact-links" aria-label="${copy.contactNav}">
-            <a href="mailto:${copy.email}">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M3.5 6.5h17v11h-17z" />
-                  <path d="m4 7 8 6 8-6" />
-                </svg>
-              </span>
-              <span>${copy.email}</span>
-              <span class="arrow" aria-hidden="true">↗</span>
-            </a>
-          </nav>
-        </section>
-
-        <section class="featured-project" aria-labelledby="featured-project-heading">
-          <h2 id="featured-project-heading" class="section-label">${copy.featuredProject}</h2>
-          <p class="project-intro">${copy.projectRelationship}</p>
+        <div class="featured-project">
           <a
             class="project-link"
             href="${copy.flyingLowUrl}"
@@ -146,6 +124,22 @@ function render() {
             </span>
             <span class="arrow" aria-hidden="true">↗</span>
           </a>
+        </div>
+
+        <section class="contact" aria-labelledby="contact-heading">
+          <h2 id="contact-heading" class="section-label">${copy.contact}</h2>
+          <nav class="contact-links" aria-label="${copy.contactNav}">
+            <a href="mailto:${copy.email}">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3.5 6.5h17v11h-17z" />
+                  <path d="m4 7 8 6 8-6" />
+                </svg>
+              </span>
+              <span>${copy.email}</span>
+              <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          </nav>
         </section>
       </div>
     </section>
