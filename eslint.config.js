@@ -14,6 +14,7 @@ export default [
         localStorage: "readonly",
         matchMedia: "readonly",
         requestAnimationFrame: "readonly",
+        window: "readonly",
       },
     },
   },

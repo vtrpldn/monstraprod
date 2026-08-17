@@ -14,12 +14,15 @@ const content = {
     contact: "Contato",
     contactNav: "Formas de contato",
     email: "contato@monstraprod.com",
+    projects: "Projetos culturais",
+    projectName: "Grupo Flying Low",
     languageLabel: "Idioma",
     flyingLowUrl: "https://grupoflyinglow.com",
     portugueseLabel: "Exibir em português do Brasil",
     englishLabel: "Show in English",
     logoAlt: "Monstra Prod",
-    externalLabel: "Visitar Grupo Flying Low — abre em nova aba",
+    externalLabel:
+      "Conheça o projeto cultural Grupo Flying Low — abre em nova aba",
   },
   en: {
     title: "Monstra Prod — Productions",
@@ -28,12 +31,15 @@ const content = {
     contact: "Contact",
     contactNav: "Contact options",
     email: "hello@monstraprod.com",
+    projects: "Cultural projects",
+    projectName: "Grupo Flying Low",
     languageLabel: "Language",
     flyingLowUrl: "https://www.grupoflyinglow.com/en",
     portugueseLabel: "Exibir em português do Brasil",
     englishLabel: "Show in English",
     logoAlt: "Monstra Prod",
-    externalLabel: "Visit Grupo Flying Low — opens in a new tab",
+    externalLabel:
+      "Explore Grupo Flying Low, a cultural project — opens in a new tab",
   },
 };
 
@@ -99,21 +105,27 @@ function render() {
 
       <div class="divider" aria-hidden="true"></div>
 
-      <div class="contact">
-        <p class="contact-label">${copy.contact}</p>
-        <nav class="contact-links" aria-label="${copy.contactNav}">
-          <a href="mailto:${copy.email}">
-            <span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M3.5 6.5h17v11h-17z" />
-                <path d="m4 7 8 6 8-6" />
-              </svg>
-            </span>
-            <span>${copy.email}</span>
-            <span class="arrow" aria-hidden="true">↗</span>
-          </a>
+      <div class="details">
+        <section class="contact" aria-labelledby="contact-heading">
+          <h2 id="contact-heading" class="section-label">${copy.contact}</h2>
+          <nav class="contact-links" aria-label="${copy.contactNav}">
+            <a href="mailto:${copy.email}">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3.5 6.5h17v11h-17z" />
+                  <path d="m4 7 8 6 8-6" />
+                </svg>
+              </span>
+              <span>${copy.email}</span>
+              <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          </nav>
+        </section>
 
+        <section class="projects" aria-labelledby="projects-heading">
+          <h2 id="projects-heading" class="section-label">${copy.projects}</h2>
           <a
+            class="project-link"
             href="${copy.flyingLowUrl}"
             target="_blank"
             rel="noopener noreferrer"
@@ -125,64 +137,63 @@ function render() {
                 <path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" />
               </svg>
             </span>
-            <span>grupoflyinglow.com</span>
+            <span class="project-copy">
+              <strong>${copy.projectName}</strong>
+              <small>grupoflyinglow.com</small>
+            </span>
             <span class="arrow" aria-hidden="true">↗</span>
           </a>
-        </nav>
+        </section>
       </div>
     </section>
   `;
-
-  setupCardMotion();
 }
 
-function setupCardMotion() {
+let motionFrameId = 0;
+let nextRotationX = 0;
+let nextRotationY = 0;
+
+function applyPageMotion() {
   const card = app.querySelector(".card");
-  if (!(card instanceof HTMLElement)) {
-    return;
+  if (card instanceof HTMLElement) {
+    card.style.setProperty("--pointer-rotate-x", `${nextRotationX.toFixed(3)}deg`);
+    card.style.setProperty("--pointer-rotate-y", `${nextRotationY.toFixed(3)}deg`);
   }
+  motionFrameId = 0;
+}
 
-  /** @type {DOMRect | undefined} */
-  let bounds;
-  let frameId = 0;
-  let nextRotation = 0;
+function schedulePageMotion(rotationX, rotationY) {
+  nextRotationX = rotationX;
+  nextRotationY = rotationY;
+  if (!motionFrameId) {
+    motionFrameId = requestAnimationFrame(applyPageMotion);
+  }
+}
 
-  const applyRotation = () => {
-    card.style.setProperty("--pointer-rotation", `${nextRotation.toFixed(3)}deg`);
-    frameId = 0;
-  };
+function resetPageMotion() {
+  schedulePageMotion(0, 0);
+}
 
-  const scheduleRotation = (rotation) => {
-    nextRotation = rotation;
-    if (!frameId) {
-      frameId = requestAnimationFrame(applyRotation);
-    }
-  };
-
-  card.addEventListener("pointerenter", (event) => {
-    if (pointerMotion.matches && event.pointerType === "mouse") {
-      bounds = card.getBoundingClientRect();
-    }
-  });
-
-  card.addEventListener("pointermove", (event) => {
+function setupPageMotion() {
+  window.addEventListener("pointermove", (event) => {
     if (!pointerMotion.matches || event.pointerType !== "mouse") {
       return;
     }
 
-    bounds ??= card.getBoundingClientRect();
-    const horizontalPosition = (event.clientX - bounds.left) / bounds.width - 0.5;
-    const rotation = Math.max(-1.2, Math.min(1.2, horizontalPosition * 2.4));
-    scheduleRotation(rotation);
+    const horizontalPosition = (event.clientX / window.innerWidth - 0.5) * 2;
+    const verticalPosition = (event.clientY / window.innerHeight - 0.5) * 2;
+    const rotationY = Math.max(-3, Math.min(3, horizontalPosition * 3));
+    const rotationX = Math.max(-2.25, Math.min(2.25, verticalPosition * -2.25));
+    schedulePageMotion(rotationX, rotationY);
   });
 
-  const resetRotation = () => {
-    bounds = undefined;
-    scheduleRotation(0);
-  };
-
-  card.addEventListener("pointerleave", resetRotation);
-  card.addEventListener("pointercancel", resetRotation);
+  document.documentElement.addEventListener("pointerleave", resetPageMotion);
+  window.addEventListener("blur", resetPageMotion);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      resetPageMotion();
+    }
+  });
 }
 
 app.addEventListener("click", (event) => {
@@ -206,14 +217,10 @@ app.addEventListener("click", (event) => {
 });
 
 pointerMotion.addEventListener("change", (event) => {
-  if (event.matches) {
-    return;
-  }
-
-  const card = app.querySelector(".card");
-  if (card instanceof HTMLElement) {
-    card.style.setProperty("--pointer-rotation", "0deg");
+  if (!event.matches) {
+    resetPageMotion();
   }
 });
 
+setupPageMotion();
 render();

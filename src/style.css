@@ -81,7 +81,8 @@ body::before {
 }
 
 .card {
-  --pointer-rotation: 0deg;
+  --pointer-rotate-x: 0deg;
+  --pointer-rotate-y: 0deg;
 
   position: relative;
   width: min(100%, 76rem);
@@ -98,7 +99,7 @@ body::before {
   box-shadow:
     0 3rem 8rem rgb(0 0 0 / 65%),
     inset 0 1px 0 rgb(255 255 255 / 5%);
-  transform: rotateZ(var(--pointer-rotation));
+  transform: perspective(1400px) rotateX(var(--pointer-rotate-x)) rotateY(var(--pointer-rotate-y));
   transform-origin: center;
   transition: transform 180ms cubic-bezier(0.2, 0.75, 0.2, 1);
   will-change: transform;
@@ -131,7 +132,7 @@ body::before {
 }
 
 .brand,
-.contact {
+.details {
   position: relative;
   z-index: 1;
 }
@@ -139,6 +140,11 @@ body::before {
 .brand {
   display: grid;
   justify-items: center;
+}
+
+.details {
+  display: grid;
+  gap: clamp(2rem, 5vh, 3.25rem);
 }
 
 .visually-hidden {
@@ -154,7 +160,7 @@ body::before {
 }
 
 .eyebrow,
-.contact-label {
+.section-label {
   margin: 0;
   font-size: 0.7rem;
   font-weight: 700;
@@ -163,7 +169,7 @@ body::before {
 }
 
 .eyebrow,
-.contact-label {
+.section-label {
   color: var(--red);
 }
 
@@ -188,8 +194,8 @@ body::before {
   animation: rule-in 700ms 420ms ease-out forwards;
 }
 
-.contact-label {
-  margin-bottom: 1.6rem;
+.section-label {
+  margin-bottom: 1rem;
 }
 
 .language-switcher {
@@ -243,7 +249,8 @@ body::before {
   display: grid;
 }
 
-.contact-links a {
+.contact-links a,
+.project-link {
   min-width: 0;
   min-height: 4.6rem;
   display: grid;
@@ -259,17 +266,20 @@ body::before {
   transition: color 180ms ease, padding 180ms ease, border-color 180ms ease;
 }
 
-.contact-links a:last-child {
+.contact-links a:last-child,
+.project-link {
   border-bottom: 1px solid #303030;
 }
 
-.contact-links a:hover {
+.contact-links a:hover,
+.project-link:hover {
   padding-inline: 0.5rem;
   color: var(--red);
   border-color: var(--red);
 }
 
-.contact-links a:focus-visible {
+.contact-links a:focus-visible,
+.project-link:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 0.3rem;
 }
@@ -299,14 +309,34 @@ body::before {
   transition: transform 180ms ease;
 }
 
-.contact-links a:hover .arrow {
+.project-copy {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.project-copy strong {
+  font: inherit;
+  font-weight: 600;
+}
+
+.project-copy small {
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.contact-links a:hover .arrow,
+.project-link:hover .arrow {
   transform: translate(0.15rem, -0.15rem);
 }
 
 @keyframes card-in {
   from {
     opacity: 0;
-    transform: translateY(2rem) scale(0.985) rotateZ(var(--pointer-rotation));
+    transform: perspective(1400px) translateY(2rem) scale(0.985)
+      rotateX(var(--pointer-rotate-x)) rotateY(var(--pointer-rotate-y));
   }
 }
 
@@ -360,18 +390,20 @@ body::before {
     margin-top: 1rem;
   }
 
-  .contact-label {
+  .section-label {
     margin-bottom: 0.8rem;
   }
 
-  .contact-links a {
+  .contact-links a,
+  .project-link {
     min-height: 4.2rem;
     font-size: clamp(0.9rem, 4vw, 1.05rem);
   }
 }
 
 @media (max-width: 390px) {
-  .contact-links a {
+  .contact-links a,
+  .project-link {
     grid-template-columns: 2.2rem minmax(0, 1fr) auto;
     gap: 0.65rem;
     font-size: 0.82rem;
