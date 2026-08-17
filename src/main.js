@@ -37,6 +37,10 @@ const content = {
   },
 };
 
+const pointerMotion = matchMedia(
+  "(pointer: fine) and (prefers-reduced-motion: no-preference)",
+);
+
 /** @typedef {"pt-BR" | "en"} Locale */
 
 /** @returns {Locale} */
@@ -128,6 +132,57 @@ function render() {
       </div>
     </section>
   `;
+
+  setupCardMotion();
+}
+
+function setupCardMotion() {
+  const card = app.querySelector(".card");
+  if (!(card instanceof HTMLElement)) {
+    return;
+  }
+
+  /** @type {DOMRect | undefined} */
+  let bounds;
+  let frameId = 0;
+  let nextRotation = 0;
+
+  const applyRotation = () => {
+    card.style.setProperty("--pointer-rotation", `${nextRotation.toFixed(3)}deg`);
+    frameId = 0;
+  };
+
+  const scheduleRotation = (rotation) => {
+    nextRotation = rotation;
+    if (!frameId) {
+      frameId = requestAnimationFrame(applyRotation);
+    }
+  };
+
+  card.addEventListener("pointerenter", (event) => {
+    if (pointerMotion.matches && event.pointerType === "mouse") {
+      bounds = card.getBoundingClientRect();
+    }
+  });
+
+  card.addEventListener("pointermove", (event) => {
+    if (!pointerMotion.matches || event.pointerType !== "mouse") {
+      return;
+    }
+
+    bounds ??= card.getBoundingClientRect();
+    const horizontalPosition = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const rotation = Math.max(-1.2, Math.min(1.2, horizontalPosition * 2.4));
+    scheduleRotation(rotation);
+  });
+
+  const resetRotation = () => {
+    bounds = undefined;
+    scheduleRotation(0);
+  };
+
+  card.addEventListener("pointerleave", resetRotation);
+  card.addEventListener("pointercancel", resetRotation);
 }
 
 app.addEventListener("click", (event) => {
@@ -147,6 +202,17 @@ app.addEventListener("click", (event) => {
   const activeButton = app.querySelector(`button[data-locale="${locale}"]`);
   if (activeButton instanceof HTMLElement) {
     activeButton.focus();
+  }
+});
+
+pointerMotion.addEventListener("change", (event) => {
+  if (event.matches) {
+    return;
+  }
+
+  const card = app.querySelector(".card");
+  if (card instanceof HTMLElement) {
+    card.style.setProperty("--pointer-rotation", "0deg");
   }
 });
 

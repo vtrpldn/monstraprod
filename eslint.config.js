@@ -12,6 +12,8 @@ export default [
         Element: "readonly",
         HTMLElement: "readonly",
         localStorage: "readonly",
+        matchMedia: "readonly",
+        requestAnimationFrame: "readonly",
       },
     },
   },
