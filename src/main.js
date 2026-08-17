@@ -16,10 +16,10 @@ const content = {
     contactNav: "Formas de contato",
     email: "contato@monstraprod.com",
     projectName: "Grupo Flying Low",
-    languageLabel: "Idioma",
     flyingLowUrl: "https://grupoflyinglow.com",
-    portugueseLabel: "Exibir em português do Brasil",
-    englishLabel: "Show in English",
+    flipText: "English",
+    flipArrow: "→",
+    flipLabel: "Show the English side",
     logoAlt: "Monstra Prod",
     externalLabel:
       "Conheça Grupo Flying Low, projeto em destaque da Monstra — abre em nova aba",
@@ -33,10 +33,10 @@ const content = {
     contactNav: "Contact options",
     email: "hello@monstraprod.com",
     projectName: "Grupo Flying Low",
-    languageLabel: "Language",
     flyingLowUrl: "https://www.grupoflyinglow.com/en",
-    portugueseLabel: "Exibir em português do Brasil",
-    englishLabel: "Show in English",
+    flipText: "Português",
+    flipArrow: "←",
+    flipLabel: "Mostrar o lado em português",
     logoAlt: "Monstra Prod",
     externalLabel:
       "Explore Grupo Flying Low, a featured Monstra project — opens in a new tab",
@@ -57,43 +57,49 @@ function getInitialLocale() {
 /** @type {Locale} */
 let currentLocale = getInitialLocale();
 
-function render() {
-  const copy = content[currentLocale];
-  const isPortuguese = currentLocale === "pt-BR";
-
-  document.documentElement.lang = currentLocale;
+/** @param {Locale} locale */
+function updateDocumentMetadata(locale) {
+  const copy = content[locale];
+  document.documentElement.lang = locale;
   document.title = copy.title;
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute("content", copy.description);
+}
 
-  app.innerHTML = `
-    <div class="ambient" aria-hidden="true">
-      <span></span>
-      <span></span>
-    </div>
+/**
+ * @param {Locale} locale
+ * @param {"front" | "back"} side
+ */
+function renderFace(locale, side) {
+  const copy = content[locale];
+  const isPortuguese = locale === "pt-BR";
+  const targetLocale = isPortuguese ? "en" : "pt-BR";
+  const targetId = isPortuguese ? "english" : "portugues";
+  const isActive = locale === currentLocale;
 
-    <section class="card" aria-labelledby="brand-name">
-      <nav class="language-switcher" aria-label="${copy.languageLabel}">
-        <button
-          type="button"
-          data-locale="pt-BR"
-          lang="pt-BR"
-          aria-label="${copy.portugueseLabel}"
-          aria-pressed="${isPortuguese}"
-        >PT</button>
-        <button
-          type="button"
-          data-locale="en"
-          lang="en"
-          aria-label="${copy.englishLabel}"
-          aria-pressed="${!isPortuguese}"
-        >EN</button>
-      </nav>
+  return `
+    <div
+      id="${isPortuguese ? "portugues" : "english"}"
+      class="card-face card-face--${side}"
+      data-face-locale="${locale}"
+      aria-hidden="${!isActive}"
+      ${isActive ? "" : "inert"}
+    >
+      <a
+        class="language-link"
+        href="#${targetId}"
+        data-locale="${targetLocale}"
+        lang="${targetLocale}"
+        hreflang="${targetLocale}"
+        aria-label="${copy.flipLabel}"
+      >
+        <span>${copy.flipText}</span>
+        <span class="language-arrow" aria-hidden="true">${copy.flipArrow}</span>
+      </a>
 
       <header class="brand">
         <p class="eyebrow">${copy.eyebrow}</p>
-        <h1 id="brand-name" class="visually-hidden">Monstra Prod</h1>
         <img
           class="logo"
           src="/monstra-logo.svg"
@@ -128,8 +134,8 @@ function render() {
           </a>
         </div>
 
-        <section class="contact" aria-labelledby="contact-heading">
-          <h2 id="contact-heading" class="section-label">${copy.contact}</h2>
+        <section class="contact" aria-labelledby="contact-heading-${side}">
+          <h2 id="contact-heading-${side}" class="section-label">${copy.contact}</h2>
           <nav class="contact-links" aria-label="${copy.contactNav}">
             <a href="mailto:${copy.email}">
               <span class="icon" aria-hidden="true">
@@ -144,6 +150,25 @@ function render() {
           </nav>
         </section>
       </div>
+    </div>
+  `;
+}
+
+function render() {
+  updateDocumentMetadata(currentLocale);
+
+  app.innerHTML = `
+    <div class="ambient" aria-hidden="true">
+      <span></span>
+      <span></span>
+    </div>
+
+    <section class="card-shell" aria-labelledby="brand-name">
+      <h1 id="brand-name" class="visually-hidden">Monstra Prod</h1>
+      <div class="card ${currentLocale === "en" ? "is-flipped" : ""}">
+        ${renderFace("pt-BR", "front")}
+        ${renderFace("en", "back")}
+      </div>
     </section>
   `;
 }
@@ -153,7 +178,7 @@ let nextRotationX = 0;
 let nextRotationY = 0;
 
 function applyPageMotion() {
-  const card = app.querySelector(".card");
+  const card = app.querySelector(".card-shell");
   if (card instanceof HTMLElement) {
     card.style.setProperty("--pointer-rotate-x", `${nextRotationX.toFixed(3)}deg`);
     card.style.setProperty("--pointer-rotate-y", `${nextRotationY.toFixed(3)}deg`);
@@ -195,24 +220,55 @@ function setupPageMotion() {
   });
 }
 
-app.addEventListener("click", (event) => {
-  if (!(event.target instanceof Element)) {
-    return;
-  }
+let focusTimerId = 0;
 
-  const button = event.target.closest("button[data-locale]");
-  const locale = button?.getAttribute("data-locale");
-  if (locale !== "pt-BR" && locale !== "en") {
+/**
+ * @param {Locale} locale
+ * @param {boolean} moveFocus
+ */
+function showLocale(locale, moveFocus = false) {
+  const card = app.querySelector(".card");
+  if (!(card instanceof HTMLElement)) {
     return;
   }
 
   currentLocale = locale;
   localStorage.setItem("monstra-locale", locale);
-  render();
-  const activeButton = app.querySelector(`button[data-locale="${locale}"]`);
-  if (activeButton instanceof HTMLElement) {
-    activeButton.focus();
+  updateDocumentMetadata(locale);
+  card.classList.toggle("is-flipped", locale === "en");
+
+  for (const face of app.querySelectorAll("[data-face-locale]")) {
+    const isActive = face.getAttribute("data-face-locale") === locale;
+    face.setAttribute("aria-hidden", String(!isActive));
+    face.toggleAttribute("inert", !isActive);
   }
+
+  if (moveFocus) {
+    window.clearTimeout(focusTimerId);
+    focusTimerId = window.setTimeout(() => {
+      const activeFace = app.querySelector(`[data-face-locale="${locale}"]`);
+      const languageLink = activeFace?.querySelector(".language-link");
+      if (languageLink instanceof HTMLElement) {
+        languageLink.focus();
+      }
+    }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650);
+  }
+}
+
+app.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+
+  const link = event.target.closest("a.language-link[data-locale]");
+  const locale = link?.getAttribute("data-locale");
+  if (locale !== "pt-BR" && locale !== "en") {
+    return;
+  }
+
+  event.preventDefault();
+  const wasKeyboardActivated = "detail" in event && event.detail === 0;
+  showLocale(locale, wasKeyboardActivated);
 });
 
 pointerMotion.addEventListener("change", (event) => {
