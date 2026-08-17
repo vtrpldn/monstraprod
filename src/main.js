@@ -14,7 +14,8 @@ const content = {
     contact: "Contato",
     contactNav: "Formas de contato",
     email: "contato@monstraprod.com",
-    projects: "Projetos culturais",
+    featuredProject: "Projeto em destaque",
+    projectRelationship: "Uma iniciativa cultural da Monstra.",
     projectName: "Grupo Flying Low",
     languageLabel: "Idioma",
     flyingLowUrl: "https://grupoflyinglow.com",
@@ -22,7 +23,7 @@ const content = {
     englishLabel: "Show in English",
     logoAlt: "Monstra Prod",
     externalLabel:
-      "Conheça o projeto cultural Grupo Flying Low — abre em nova aba",
+      "Conheça Grupo Flying Low, projeto em destaque da Monstra — abre em nova aba",
   },
   en: {
     title: "Monstra Prod — Productions",
@@ -31,7 +32,8 @@ const content = {
     contact: "Contact",
     contactNav: "Contact options",
     email: "hello@monstraprod.com",
-    projects: "Cultural projects",
+    featuredProject: "Featured project",
+    projectRelationship: "A cultural project by Monstra.",
     projectName: "Grupo Flying Low",
     languageLabel: "Language",
     flyingLowUrl: "https://www.grupoflyinglow.com/en",
@@ -39,7 +41,7 @@ const content = {
     englishLabel: "Show in English",
     logoAlt: "Monstra Prod",
     externalLabel:
-      "Explore Grupo Flying Low, a cultural project — opens in a new tab",
+      "Explore Grupo Flying Low, a featured Monstra project — opens in a new tab",
   },
 };
 
@@ -122,8 +124,9 @@ function render() {
           </nav>
         </section>
 
-        <section class="projects" aria-labelledby="projects-heading">
-          <h2 id="projects-heading" class="section-label">${copy.projects}</h2>
+        <section class="featured-project" aria-labelledby="featured-project-heading">
+          <h2 id="featured-project-heading" class="section-label">${copy.featuredProject}</h2>
+          <p class="project-intro">${copy.projectRelationship}</p>
           <a
             class="project-link"
             href="${copy.flyingLowUrl}"

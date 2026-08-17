@@ -198,6 +198,17 @@ body::before {
   margin-bottom: 1rem;
 }
 
+.featured-project .section-label {
+  margin-bottom: 0.5rem;
+}
+
+.project-intro {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
 .language-switcher {
   position: absolute;
   top: clamp(1.25rem, 2.5vw, 2.5rem);
@@ -271,11 +282,21 @@ body::before {
   border-bottom: 1px solid #303030;
 }
 
+.project-link {
+  padding-inline: 0.75rem;
+  border-left: 2px solid var(--red);
+  background: linear-gradient(90deg, rgb(239 51 45 / 8%), transparent 42%);
+}
+
 .contact-links a:hover,
 .project-link:hover {
   padding-inline: 0.5rem;
   color: var(--red);
   border-color: var(--red);
+}
+
+.project-link:hover {
+  padding-inline: 1.1rem 0.4rem;
 }
 
 .contact-links a:focus-visible,
