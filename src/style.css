@@ -1,0 +1,60 @@
+:root {
+  color: #161616;
+  background: #f1eee7;
+  font-family: "Bodoni 72", Didot, "Times New Roman", serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+a {
+  color: inherit;
+  font-size: clamp(1.15rem, 3.25vw, 2.35rem);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color 160ms ease;
+}
+
+a:hover,
+a:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0.3rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a {
+    transition: none;
+  }
+}
