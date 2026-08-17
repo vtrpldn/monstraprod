@@ -80,7 +80,7 @@ body::before {
   animation-delay: -7s;
 }
 
-.card-shell {
+.card-stage {
   --pointer-rotate-x: 0deg;
   --pointer-rotate-y: 0deg;
   --card-padding-top: clamp(2rem, 6vw, 6.5rem);
@@ -89,30 +89,70 @@ body::before {
 
   position: relative;
   width: min(100%, 76rem);
-  min-height: min(41rem, calc(100svh - clamp(2rem, 8vw, 8rem)));
-  overflow: hidden;
-  border: 1px solid #292929;
-  border-radius: 0.2rem 0.2rem clamp(0.2rem, 5vw, 4.5rem) 0.2rem;
-  background: linear-gradient(122deg, #080808 5%, #121212 52%, #080808 100%);
-  box-shadow:
-    0 3rem 8rem rgb(0 0 0 / 65%),
-    inset 0 1px 0 rgb(255 255 255 / 5%);
   perspective: 1600px;
   transform: perspective(1400px) rotateX(var(--pointer-rotate-x)) rotateY(var(--pointer-rotate-y));
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transform-origin: center;
   transition: transform 180ms cubic-bezier(0.2, 0.75, 0.2, 1);
   will-change: transform;
   animation: card-in 900ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
 }
 
-.card-shell::before,
-.card-shell::after {
+.card {
+  position: relative;
+  width: 100%;
+  min-height: min(41rem, calc(100svh - clamp(2rem, 8vw, 8rem)));
+  display: grid;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 650ms cubic-bezier(0.65, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: relative;
+  grid-area: 1 / 1;
+  width: 100%;
+  min-height: inherit;
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.9fr) 1px minmax(22rem, 1.1fr);
+  align-items: center;
+  gap: clamp(2.5rem, 7vw, 7rem);
+  padding: var(--card-padding-top) var(--card-padding-inline) var(--card-padding-bottom);
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #292929;
+  border-radius: 0.2rem 0.2rem clamp(0.2rem, 5vw, 4.5rem) 0.2rem;
+  background: linear-gradient(122deg, #080808 5%, #121212 52%, #080808 100%);
+  box-shadow:
+    0 3rem 8rem rgb(0 0 0 / 65%),
+    inset 0 1px 0 rgb(255 255 255 / 5%);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(0deg) translateZ(1px);
+}
+
+.card-face--back {
+  transform: rotateY(180deg) translateZ(1px);
+}
+
+.card-face[aria-hidden="true"] {
+  pointer-events: none;
+}
+
+.card-face::before,
+.card-face::after {
   position: absolute;
   content: "";
   pointer-events: none;
 }
 
-.card-shell::before {
+.card-face::before {
   z-index: 0;
   width: 22rem;
   aspect-ratio: 1;
@@ -124,44 +164,12 @@ body::before {
   opacity: 0.75;
 }
 
-.card-shell::after {
+.card-face::after {
   inset: 0;
   z-index: 2;
   background: linear-gradient(115deg, transparent 40%, rgb(255 255 255 / 2%) 50%, transparent 60%);
   transform: translateX(-100%);
   animation: sheen 1.4s 450ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.card {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  min-height: inherit;
-  transform-style: preserve-3d;
-  transition: transform 650ms cubic-bezier(0.65, 0, 0.2, 1);
-  will-change: transform;
-}
-
-.card.is-flipped {
-  transform: rotateY(180deg);
-}
-
-.card-face {
-  width: 100%;
-  min-height: inherit;
-  display: grid;
-  grid-template-columns: minmax(18rem, 0.9fr) 1px minmax(22rem, 1.1fr);
-  align-items: center;
-  gap: clamp(2.5rem, 7vw, 7rem);
-  padding: var(--card-padding-top) var(--card-padding-inline) var(--card-padding-bottom);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.card-face--back {
-  position: absolute;
-  inset: 0;
-  transform: rotateY(180deg);
 }
 
 .brand,
@@ -416,18 +424,21 @@ body::before {
     padding: 0;
   }
 
-  .card-shell {
+  .card-stage {
     --card-padding-top: clamp(5rem, 12vw, 6rem);
     --card-padding-bottom: clamp(2rem, 9vw, 4rem);
     --card-padding-inline: clamp(1.35rem, 7vw, 3rem);
 
     width: 100%;
+  }
+
+  .card {
     min-height: 100svh;
-    border: 0;
-    border-radius: 0 0 4.5rem 0;
   }
 
   .card-face {
+    border: 0;
+    border-radius: 0 0 4.5rem 0;
     grid-template-columns: 1fr;
     grid-template-rows: auto 1px auto;
     align-content: center;

@@ -163,13 +163,16 @@ function render() {
       <span></span>
     </div>
 
-    <section class="card-shell" aria-labelledby="brand-name">
-      <h1 id="brand-name" class="visually-hidden">Monstra Prod</h1>
-      <div class="card ${currentLocale === "en" ? "is-flipped" : ""}">
+    <div class="card-stage">
+      <section
+        class="card ${currentLocale === "en" ? "is-flipped" : ""}"
+        aria-labelledby="brand-name"
+      >
+        <h1 id="brand-name" class="visually-hidden">Monstra Prod</h1>
         ${renderFace("pt-BR", "front")}
         ${renderFace("en", "back")}
-      </div>
-    </section>
+      </section>
+    </div>
   `;
 }
 
@@ -178,7 +181,7 @@ let nextRotationX = 0;
 let nextRotationY = 0;
 
 function applyPageMotion() {
-  const card = app.querySelector(".card-shell");
+  const card = app.querySelector(".card-stage");
   if (card instanceof HTMLElement) {
     card.style.setProperty("--pointer-rotate-x", `${nextRotationX.toFixed(3)}deg`);
     card.style.setProperty("--pointer-rotate-y", `${nextRotationY.toFixed(3)}deg`);
