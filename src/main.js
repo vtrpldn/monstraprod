@@ -15,6 +15,7 @@ const content = {
     contactNav: "Formas de contato",
     email: "contato@monstraprod.com",
     languageLabel: "Idioma",
+    flyingLowUrl: "https://grupoflyinglow.com",
     portugueseLabel: "Exibir em português do Brasil",
     englishLabel: "Show in English",
     logoAlt: "Monstra Prod",
@@ -28,6 +29,7 @@ const content = {
     contactNav: "Contact options",
     email: "hello@monstraprod.com",
     languageLabel: "Language",
+    flyingLowUrl: "https://www.grupoflyinglow.com/en",
     portugueseLabel: "Exibir em português do Brasil",
     englishLabel: "Show in English",
     logoAlt: "Monstra Prod",
@@ -108,7 +110,7 @@ function render() {
           </a>
 
           <a
-            href="https://grupoflyinglow.com"
+            href="${copy.flyingLowUrl}"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="${copy.externalLabel}"
