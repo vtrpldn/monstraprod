@@ -130,9 +130,25 @@ body::before {
   z-index: 1;
 }
 
+.brand {
+  display: grid;
+  justify-items: center;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .eyebrow,
-.contact-label,
-.brand-foot {
+.contact-label {
   margin: 0;
   font-size: 0.7rem;
   font-weight: 700;
@@ -145,52 +161,14 @@ body::before {
   color: var(--red);
 }
 
-.eyebrow span,
-.contact-label span {
-  color: var(--muted);
-}
-
-h1 {
-  width: min-content;
-  margin: 1.3rem 0 0.9rem;
-  color: var(--red);
-  font-family: Impact, Haettenschweiler, "Franklin Gothic Condensed", sans-serif;
-  font-size: clamp(6.5rem, 13vw, 11rem);
-  font-weight: 900;
-  font-style: italic;
-  line-height: 0.58;
-  letter-spacing: -0.075em;
-  text-transform: uppercase;
-  transform: skew(-5deg) rotate(-2deg);
-  filter: drop-shadow(0.12em 0.08em 0 #490b09);
-}
-
-h1 span {
+.logo {
+  width: clamp(9.5rem, 17vw, 14.5rem);
+  height: auto;
+  max-height: min(21rem, 43svh);
   display: block;
-}
-
-h1 span:last-child {
-  padding-left: 0.18em;
-}
-
-.brand-foot {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin-top: clamp(1.5rem, 3vw, 2.5rem);
-  color: var(--paper);
-}
-
-.brand-foot::before {
-  width: 2.6rem;
-  height: 2px;
-  content: "";
-  background: var(--red);
-}
-
-.brand-foot span {
-  color: var(--muted);
-  font-size: 0.58rem;
+  margin-top: 1.5rem;
+  object-fit: contain;
+  filter: drop-shadow(0.6rem 0.7rem 0 #490b09);
 }
 
 .divider {
@@ -208,11 +186,58 @@ h1 span:last-child {
   margin-bottom: 1.6rem;
 }
 
-nav {
+.language-switcher {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vw, 2.5rem);
+  right: clamp(1.25rem, 2.5vw, 2.5rem);
+  z-index: 3;
+  display: flex;
+  padding: 0.25rem;
+  border: 1px solid #343434;
+  border-radius: 999px;
+  background: rgb(8 8 8 / 72%);
+  backdrop-filter: blur(0.5rem);
+}
+
+.language-switcher button {
+  width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  color: var(--muted);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  font: inherit;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.language-switcher button:hover {
+  color: var(--paper);
+}
+
+.language-switcher button[aria-pressed="true"] {
+  color: #090909;
+  background: var(--red);
+}
+
+.language-switcher button:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 0.15rem;
+}
+
+.language-switcher button:active {
+  transform: scale(0.94);
+}
+
+.contact-links {
   display: grid;
 }
 
-nav a {
+.contact-links a {
   min-width: 0;
   min-height: 4.6rem;
   display: grid;
@@ -228,17 +253,17 @@ nav a {
   transition: color 180ms ease, padding 180ms ease, border-color 180ms ease;
 }
 
-nav a:last-child {
+.contact-links a:last-child {
   border-bottom: 1px solid #303030;
 }
 
-nav a:hover {
+.contact-links a:hover {
   padding-inline: 0.5rem;
   color: var(--red);
   border-color: var(--red);
 }
 
-nav a:focus-visible {
+.contact-links a:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 0.3rem;
 }
@@ -268,7 +293,7 @@ nav a:focus-visible {
   transition: transform 180ms ease;
 }
 
-nav a:hover .arrow {
+.contact-links a:hover .arrow {
   transform: translate(0.15rem, -0.15rem);
 }
 
@@ -323,22 +348,24 @@ nav a:hover .arrow {
     transform-origin: left;
   }
 
-  h1 {
-    font-size: clamp(5.6rem, 32vw, 9rem);
+  .logo {
+    width: clamp(7.75rem, 27vw, 10rem);
+    max-height: 26svh;
+    margin-top: 1rem;
   }
 
   .contact-label {
     margin-bottom: 0.8rem;
   }
 
-  nav a {
+  .contact-links a {
     min-height: 4.2rem;
     font-size: clamp(0.9rem, 4vw, 1.05rem);
   }
 }
 
 @media (max-width: 390px) {
-  nav a {
+  .contact-links a {
     grid-template-columns: 2.2rem minmax(0, 1fr) auto;
     gap: 0.65rem;
     font-size: 0.82rem;

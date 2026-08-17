@@ -9,6 +9,9 @@ export default [
     languageOptions: {
       globals: {
         document: "readonly",
+        Element: "readonly",
+        HTMLElement: "readonly",
+        localStorage: "readonly",
       },
     },
   },
