@@ -46,6 +46,8 @@ const content = {
 const pointerMotion = matchMedia(
   "(pointer: fine) and (prefers-reduced-motion: no-preference)",
 );
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const flipDuration = 560;
 
 /** @typedef {"pt-BR" | "en"} Locale */
 
@@ -203,7 +205,11 @@ function resetPageMotion() {
 
 function setupPageMotion() {
   window.addEventListener("pointermove", (event) => {
-    if (!pointerMotion.matches || event.pointerType !== "mouse") {
+    if (
+      !pointerMotion.matches ||
+      event.pointerType !== "mouse" ||
+      document.documentElement.classList.contains("is-flipping")
+    ) {
       return;
     }
 
@@ -224,6 +230,7 @@ function setupPageMotion() {
 }
 
 let focusTimerId = 0;
+let flipTimerId = 0;
 
 /**
  * @param {Locale} locale
@@ -238,6 +245,8 @@ function showLocale(locale, moveFocus = false) {
   currentLocale = locale;
   localStorage.setItem("monstra-locale", locale);
   updateDocumentMetadata(locale);
+  document.documentElement.classList.add("is-flipping");
+  resetPageMotion();
   card.classList.toggle("is-flipped", locale === "en");
 
   for (const face of app.querySelectorAll("[data-face-locale]")) {
@@ -246,15 +255,21 @@ function showLocale(locale, moveFocus = false) {
     face.toggleAttribute("inert", !isActive);
   }
 
+  window.clearTimeout(focusTimerId);
+  window.clearTimeout(flipTimerId);
+  const activeFlipDuration = reducedMotion.matches ? 0 : flipDuration;
+  flipTimerId = window.setTimeout(() => {
+    document.documentElement.classList.remove("is-flipping");
+  }, activeFlipDuration + (reducedMotion.matches ? 0 : 40));
+
   if (moveFocus) {
-    window.clearTimeout(focusTimerId);
     focusTimerId = window.setTimeout(() => {
       const activeFace = app.querySelector(`[data-face-locale="${locale}"]`);
       const languageLink = activeFace?.querySelector(".language-link");
       if (languageLink instanceof HTMLElement) {
         languageLink.focus();
       }
-    }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650);
+    }, activeFlipDuration);
   }
 }
 
