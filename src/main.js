@@ -8,8 +8,9 @@ if (!app) {
 
 const content = {
   "pt-BR": {
-    title: "Monstra Prod — Produções",
-    description: "Monstra Produções — contato e Grupo Flying Low.",
+    title: "Monstra Prod — Produções Culturais",
+    description:
+      "Monstra Prod é uma produtora cultural responsável pelo projeto Grupo Flying Low. Entre em contato.",
     eyebrow: "Produções",
     contact: "Contato",
     contactNav: "Formas de contato",
@@ -24,8 +25,9 @@ const content = {
       "Conheça Grupo Flying Low, projeto em destaque da Monstra — abre em nova aba",
   },
   en: {
-    title: "Monstra Prod — Productions",
-    description: "Monstra Productions — contact and Grupo Flying Low.",
+    title: "Monstra Prod — Cultural Productions",
+    description:
+      "Monstra Prod is a cultural production company behind the Grupo Flying Low project. Get in touch.",
     eyebrow: "Productions",
     contact: "Contact",
     contactNav: "Contact options",
